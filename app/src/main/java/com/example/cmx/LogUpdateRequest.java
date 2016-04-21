@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.cmx.models.CMXUpdateBean;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,15 +58,25 @@ public class LogUpdateRequest extends AsyncTask<String, Void , String> {
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
-            // Starts the query
             conn.connect();
-            int response = conn.getResponseCode();
+            is=conn.getInputStream();
+            BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+            StringBuffer buf=new StringBuffer();
+            String line="";
+            while((line=reader.readLine())!=null){
+                buf.append(line);
+            }
+            // Starts the query
+
+            String jsonString=buf.toString();
+        /*    int response = conn.getResponseCode();
             Log.d(DEBUG_TAG, "The response is: " + response);
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
             String contentAsString = readIt(is, len);
-            return contentAsString;
+        */
+            return jsonString;
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.

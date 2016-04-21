@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class CMXLogUpdateAdapter extends BaseAdapter{
 
-    ArrayList <String> listBeans;
+    ArrayList <CMXUpdateBean> listBeans;
     Context thisContext;
     LayoutInflater inflater;
     ViewHolder viewHolder;
 
-    public  CMXLogUpdateAdapter (Context context, ArrayList<String> list) {
+    public  CMXLogUpdateAdapter (Context context, ArrayList<CMXUpdateBean> list) {
         thisContext = context;
         listBeans = list;
         inflater  = LayoutInflater.from(thisContext);
@@ -37,7 +37,7 @@ public class CMXLogUpdateAdapter extends BaseAdapter{
     }
 
     @Override
-    public String getItem(int position) {
+    public CMXUpdateBean getItem(int position) {
         return listBeans.get(position);
     }
 
@@ -58,8 +58,11 @@ public class CMXLogUpdateAdapter extends BaseAdapter{
             viewHolder  = (ViewHolder) convertView.getTag();
         }
 
-    //    CMXUpdateBean cmxUpdateBean = getItem(position);
-        viewHolder.txtProject.setText(getItem(position));//cmxUpdateBean.getProjectId());
+        CMXUpdateBean cmxUpdateBean = getItem(position);
+        viewHolder.txtId.setText(cmxUpdateBean.getProjectId());
+        viewHolder.txtProject.setText(cmxUpdateBean.getProjectName());
+        viewHolder.txtSubject.setText(cmxUpdateBean.getSubject());
+
         return convertView;
     }
 
@@ -71,7 +74,9 @@ private class ViewHolder  {
     TextView txtSubject;
 
     public ViewHolder(View v) {
-        txtProject = (TextView) v.findViewById(R.id.txtProjectId);
+        txtId = (TextView)v.findViewById(R.id.txtProjectId);
+        txtProject = (TextView)v.findViewById(R.id.txtProjectName);
+        txtSubject = (TextView)v.findViewById(R.id.txtSubject);
     }
 
 }

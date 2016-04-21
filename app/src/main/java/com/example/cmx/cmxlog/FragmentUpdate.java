@@ -20,6 +20,10 @@ import com.example.cmx.adapters.CMXLogUpdateAdapter;
 import com.example.cmx.models.CMXUpdateBean;
 import com.example.cmx.utilities.CMXUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +32,7 @@ import java.util.List;
  * Created by HaRsH on 02-04-2016.
  */
 public class FragmentUpdate extends Fragment implements OnTaskComplete {
-    private ArrayList<String> aLFake;
+    private ArrayList<CMXUpdateBean> aLFake;
     ListView listUpdates;
     String [] str = {"Harsh Soni","Bhavin Shah","Kishor Davra", "Deep Amin"};
     Context context;
@@ -67,8 +71,30 @@ public class FragmentUpdate extends Fragment implements OnTaskComplete {
 
     @Override
     public void processResponse(String response) {
-        Log.d("frag" , response);
-        aLFake = new ArrayList<>(Arrays.asList(str));
-        listUpdates.setAdapter(new CMXLogUpdateAdapter(context,aLFake));
+        if (response == null) return;
+        aLFake = new ArrayList<CMXUpdateBean>();
+        response = response.substring(response.indexOf("[") , response.length()-2);
+        Log.d("frag", response);
+        try{
+            JSONArray jsonArray =  new JSONArray(response);
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject obj= jsonArray.getJSONObject(i);
+                String project=obj.getString("project");
+                String subject = obj.getString("subject");
+                String id = obj.getString("id");
+
+                CMXUpdateBean cmxUpdateBean = new CMXUpdateBean();
+                cmxUpdateBean.setProjectId(id);
+                cmxUpdateBean.setProjectName(project);
+                cmxUpdateBean.setSubject(subject);
+                aLFake.add(cmxUpdateBean);
+                Log.i("Project Name:",project);
+            }
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        //aLFake = new ArrayList<>(Arrays.asList(str));
+        listUpdates.setAdapter(new CMXLogUpdateAdapter(context, aLFake));
     }
 }
